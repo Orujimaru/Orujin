@@ -7,7 +7,7 @@ namespace Orujin.Core.Renderer
 {
     public interface IRendererInterface
     {
-        RendererPackage GetRendererPackage();
+        RendererPackage PrepareRendererPackage();
         void Update(float elapsedTime);
         void AdjustBrightness(float newBrightness);
     }

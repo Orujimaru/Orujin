@@ -48,7 +48,6 @@ namespace Orujin
             base.Initialize();
         }
 
-
         protected override void LoadContent()
         {     
             this.debugManager.InitiateFarseerDebugView(this.graphics.GraphicsDevice, this.Content, GameManager.game.world);
@@ -91,6 +90,7 @@ namespace Orujin
                 }
             }
         }
+
         protected override void Draw(GameTime gameTime)
         {
             this.rendererManager.Begin();
@@ -102,6 +102,21 @@ namespace Orujin
             this.debugManager.RenderFarseerDebugView(this.graphics);
 
             base.Draw(gameTime);
+        }
+
+        public Texture2D GetTexture2DByName(String name)
+        {
+            return Content.Load<Texture2D>(name);
+        }
+
+        public SpriteAnimation GetSpriteAnimationByName(String name)
+        {
+            return SpriteAnimationLoader.Load(name);
+        }
+
+        public ModularAnimation GetModularAnimationByName(String name)
+        {
+            return ModularAnimationLoader.Load(name);
         }
     }
 }

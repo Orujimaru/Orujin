@@ -11,6 +11,7 @@ namespace Orujin.Core.Renderer
     {
         public RendererPackage rendererPackage;
         public SpriteAnimation spriteAnimation { get; private set; }
+        public ModularAnimation modularAnimation { get; private set; }
 
         public string name { get; private set; }
 
@@ -19,37 +20,118 @@ namespace Orujin.Core.Renderer
             this.spriteAnimation = null;
             this.rendererPackage.texture = texture;
             this.rendererPackage.destination = new Rectangle(0, 0, texture.Bounds.Width, texture.Bounds.Height);
-            this.rendererPackage.parentOffset = parentOffset;
+            this.rendererPackage.positionOffset = Vector2.Zero;
+            this.rendererPackage.parentOffset = parentOffset;        
             this.rendererPackage.color = color;
             this.rendererPackage.originalColor = color;
             this.rendererPackage.overloadIndex = 2;
             this.rendererPackage.layer = layer;
+            this.rendererPackage.scale = new Vector2(1, 1);
+            this.rendererPackage.defaultOrigin = new Vector2(this.rendererPackage.destination.Center.X, this.rendererPackage.destination.Center.Y);
+            this.rendererPackage.origin = this.rendererPackage.defaultOrigin;
             this.name = name;           
         }
 
-        public static Sprite CreateLight(Texture2D texture, Vector2 position, Color color, string name)
+        public static Sprite CreateLight(Texture2D texture, Vector2 position, Nullable<Vector2> origin, SpriteAnimation spriteAnimation, ModularAnimation ModularAnimation, Color color, string name)
         {
-            return new Sprite(texture, position, color, 2, name);
+            Sprite s = new Sprite(texture, position, color, 2, name);
+            s.SetOrigin(origin);
+            s.AddAnimation(spriteAnimation);
+            s.AddModularAnimation(ModularAnimation);
+            return s;
         }
 
-        public static Sprite CreateSprite(Texture2D texture, Vector2 position, Color color, string name)
+        public static Sprite CreateSprite(Texture2D texture, Vector2 position, Nullable<Vector2> origin, SpriteAnimation spriteAnimation, ModularAnimation ModularAnimation, Color color, string name)
         {
-            return new Sprite(texture, position, color, 1, name);
+            Sprite s = new Sprite(texture, position, color, 1, name);
+            s.SetOrigin(origin);
+            s.AddAnimation(spriteAnimation);
+            s.AddModularAnimation(ModularAnimation);
+            return s;
+        }
+
+        public static Sprite CreateTile(Texture2D texture, Vector2 position, Vector2 scrollOffset, string name)
+        {
+            Sprite s = new Sprite(texture, position, Color.White, 1, name);
+            s.rendererPackage.scrollOffset = scrollOffset;
+            return s;
+        }
+
+        public void SetOrigin(Nullable<Vector2> newOrigin)
+        {
+            if (newOrigin == null)
+            {
+                this.rendererPackage.origin = this.rendererPackage.defaultOrigin;
+            }
+            else
+            {
+                this.rendererPackage.origin = (Vector2)newOrigin;
+            }
         }
 
         public void AddAnimation(SpriteAnimation animation)
         {
-            this.spriteAnimation = animation;
-            this.rendererPackage.overloadIndex = 3;
+            if (animation == null)
+            {
+                this.spriteAnimation = null;
+            }
+            else
+            {
+                this.spriteAnimation = animation;
+            }
+            this.SetOverloadIndex();
         }
 
-        public RendererPackage GetRendererPackage()
+        public void AddModularAnimation(ModularAnimation animation)
+        {
+            if (animation == null)
+            {
+                this.spriteAnimation = null;
+            }
+            else
+            {
+                this.modularAnimation = animation;
+            }
+            this.SetOverloadIndex();
+        }
+
+        private void SetOverloadIndex()
+        {
+            if (this.spriteAnimation != null && this.modularAnimation == null)
+            {
+                this.rendererPackage.overloadIndex = 3;
+            }
+            else if (this.modularAnimation != null && this.spriteAnimation == null)
+            {
+                this.rendererPackage.overloadIndex = 7;
+            }
+            else if (this.modularAnimation != null)
+            {
+                this.rendererPackage.overloadIndex = 5;
+            }    
+            else
+            {
+                this.rendererPackage.overloadIndex = 2;
+            }
+        }
+
+        public RendererPackage PrepareRendererPackage()
         {
             if (this.spriteAnimation != null)
             {
                 Rectangle src = this.spriteAnimation.GetCurrentFrame();
                 this.rendererPackage.source = src;
                 this.rendererPackage.destination = src;
+            }
+            else
+            {
+                this.rendererPackage.source = this.rendererPackage.texture.Bounds;
+            }
+            if (this.modularAnimation != null)
+            {
+                this.rendererPackage.rotation = this.modularAnimation.rotation;
+                this.rendererPackage.scale = this.modularAnimation.scale;
+                this.rendererPackage.positionOffset = this.modularAnimation.positionOffset;
             }
             return this.rendererPackage;
         }
@@ -59,6 +141,10 @@ namespace Orujin.Core.Renderer
             if (this.spriteAnimation != null)
             {
                 this.spriteAnimation.Update(elapsedTime);
+            }
+            if (this.modularAnimation != null)
+            {
+                this.modularAnimation.Update(elapsedTime);
             }
         }
 

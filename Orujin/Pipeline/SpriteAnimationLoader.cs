@@ -4,12 +4,13 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Orujin.Core.Renderer;
 
 namespace Orujin.Pipeline
 {
-    public class SpriteAnimationLoader
+    internal class SpriteAnimationLoader
     {
         public static SpriteAnimation Load(string animationName)
         {
@@ -21,7 +22,7 @@ namespace Orujin.Pipeline
                 {
                     line = sr.ReadToEnd();
                 }
-                string[] frames = line.Split('.');
+                string[] frames = line.Split('|');
                 numberOfFrames = frames.Count() - 1;
 
                 if (numberOfFrames <= 0)
@@ -50,7 +51,7 @@ namespace Orujin.Pipeline
 
                     SpriteAnimation.Frame tempFrame = new SpriteAnimation.Frame();
                     tempFrame.duration = duration;
-                    tempFrame.source = new Microsoft.Xna.Framework.Rectangle(x, y, width, height);
+                    tempFrame.source = new Rectangle(x, y, width, height);
                     spriteFrames.Add(tempFrame);
                 }
                 SpriteAnimation spriteAnimation = new SpriteAnimation(spriteFrames);

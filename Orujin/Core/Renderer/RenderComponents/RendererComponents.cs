@@ -50,10 +50,20 @@ namespace Orujin.Core.Renderer
         {
             foreach (Sprite sprite in this.children)
             {
-                sprite.rendererPackage.destination.X = (int)(this.parent.origin.X + sprite.rendererPackage.parentOffset.X) - sprite.rendererPackage.destination.Width / 2;
-                sprite.rendererPackage.destination.Y = (int)(this.parent.origin.Y + sprite.rendererPackage.parentOffset.Y) - sprite.rendererPackage.destination.Height / 2;
+                sprite.PrepareRendererPackage();
+                float widthOffset = sprite.rendererPackage.destination.Width / 2;
+                float heightOffset = sprite.rendererPackage.destination.Height / 2;
 
-                sprite.rendererPackage.position = this.parent.origin + sprite.rendererPackage.parentOffset - new Vector2(sprite.rendererPackage.texture.Bounds.Width / 2, sprite.rendererPackage.texture.Bounds.Height / 2);
+                Vector2 parentOffset = sprite.rendererPackage.parentOffset;
+
+                Vector2 originOffset = new Vector2(widthOffset, heightOffset);
+                if (sprite.rendererPackage.overloadIndex >= 5)
+                {
+                    originOffset = originOffset - sprite.rendererPackage.origin;             
+                }
+
+                sprite.rendererPackage.position = this.parent.origin - originOffset + parentOffset + sprite.rendererPackage.positionOffset;
+                sprite.rendererPackage.destination = new Rectangle((int)sprite.rendererPackage.position.X, (int)sprite.rendererPackage.position.Y, sprite.rendererPackage.destination.Width, sprite.rendererPackage.destination.Height);                         
             }
             return this.children;
         }
@@ -66,14 +76,19 @@ namespace Orujin.Core.Renderer
             }
         }
 
-        public void AddLight(Texture2D texture, Vector2 offset, Color color, string name)
+        public void AddLight(Texture2D texture, Vector2 offset, Nullable<Vector2> origin, Color color, string name)
         {
-            this.children.Add(Sprite.CreateLight(texture, offset, color, name));
+            this.children.Add(Sprite.CreateLight(texture, offset, origin, null, null, color, name));
         }
 
-        public void AddSprite(Texture2D texture, Vector2 offset, Color color, string name)
+        public void AddSprite(Texture2D texture, Vector2 offset, Nullable<Vector2> origin, Color color, string name)
         {
-            this.children.Add(Sprite.CreateSprite(texture, offset, color, name));
+            this.children.Add(Sprite.CreateSprite(texture, offset, origin, null, null, color, name));
+        }
+
+        public void AddSprite(Sprite sprite)
+        {
+            this.children.Add(sprite);
         }
 
         public int AddAnimationToComponent(string componentName, SpriteAnimation animation)
@@ -83,6 +98,19 @@ namespace Orujin.Core.Renderer
                 if (this.children[x].name == componentName)
                 {
                     this.children[x].AddAnimation(animation);
+                    return 1;
+                }
+            }
+            return 0;
+        }
+
+        public int AddModularAnimationToComponent(string componentName, ModularAnimation animation)
+        {
+            for (int x = 0; x < this.children.Count(); x++)
+            {
+                if (this.children[x].name == componentName)
+                {
+                    this.children[x].AddModularAnimation(animation);
                     return 1;
                 }
             }

@@ -22,7 +22,24 @@ namespace Orujin.Framework
         public RendererComponents rendererComponents { get; private set; }
 
         private Vector2 position;
-        public Vector2 origin { get { if (prioritizeFarseerPhysics) { return this.physicsBody.Position * Camera.PixelsPerMeter; } else { return position; } } private set { return; } }
+        public Vector2 scrollOffset { get; protected set; }
+        public Vector2 origin {
+            get
+            {
+                if (prioritizeFarseerPhysics)
+                {
+                    return this.physicsBody.Position * Camera.PixelsPerMeter;
+                }
+                else
+                {
+                    return position + scrollOffset * Camera.position;
+                }
+            }
+            private set
+            {
+                return;
+            }
+        }
         public Vector2 nextVelocity { get; private set; }
         public float velocityModifier { get; private set; }
 

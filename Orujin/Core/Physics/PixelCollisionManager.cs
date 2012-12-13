@@ -12,7 +12,7 @@ namespace Orujin.Core.Physics
     {
         public static bool Intersects(Sprite spriteA, Sprite spriteB)
         {
-            if(spriteA.GetRendererPackage().destination.Intersects(spriteB.GetRendererPackage().destination))
+            if(spriteA.PrepareRendererPackage().destination.Intersects(spriteB.PrepareRendererPackage().destination))
             {
                 return IntersectsPixels(spriteA, spriteB);
             }
@@ -21,8 +21,8 @@ namespace Orujin.Core.Physics
 
         public static bool IntersectsPixels(Sprite spriteA, Sprite spriteB)
         {           
-            Rectangle destinationA = spriteA.GetRendererPackage().destination;
-            Rectangle destinationB = spriteB.GetRendererPackage().destination;
+            Rectangle destinationA = spriteA.PrepareRendererPackage().destination;
+            Rectangle destinationB = spriteB.PrepareRendererPackage().destination;
 
             // Find the bounds of the rectangle intersection
             int top = Math.Max(destinationA.Top, destinationB.Top);

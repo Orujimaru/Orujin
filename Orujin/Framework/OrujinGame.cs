@@ -4,14 +4,17 @@ using System.Linq;
 using System.Text;
 using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Orujin.Core.Logic;
+using Orujin.Core.Renderer;
 
 namespace Orujin.Framework
 {
     public class OrujinGame
     {
-        internal Orujin orujin;
+        internal static Orujin orujin;
         public World world {get; internal set;}
         public string name;
         
@@ -21,9 +24,9 @@ namespace Orujin.Framework
             this.name = name;
         }
 
-        internal void Initialize(Orujin orujin)
+        internal void Initialize(Orujin o)
         {
-            this.orujin = orujin;
+            orujin = o;
         }
 
         public virtual void Start()
@@ -62,6 +65,21 @@ namespace Orujin.Framework
         public void AddInputCommand(string objectName, string methodName, object[] parameters, Keys key, Buttons button)
         {
             orujin.inputManager.AddCommand(objectName, methodName, parameters, key, button);
+        }
+
+        public static Texture2D GetTexture2DByName(String name)
+        {
+            return orujin.GetTexture2DByName(name);
+        }
+
+        public static SpriteAnimation GetSpriteAnimationByName(String name)
+        {
+            return orujin.GetSpriteAnimationByName(name);
+        }
+
+        public static ModularAnimation GetModularAnimationByName(String name)
+        {
+            return orujin.GetModularAnimationByName(name);
         }
     }
 }

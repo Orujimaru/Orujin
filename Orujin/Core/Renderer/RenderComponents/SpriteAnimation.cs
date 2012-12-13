@@ -9,15 +9,15 @@ namespace Orujin.Core.Renderer
 {
     public class SpriteAnimation
     {
-        public const float FinishedPlaying = -100000;
-        public const int FirstFrame = -100;
-        public const int LastFrame = 100;
-
         public struct Frame
         {
             public Rectangle source;
             public float duration;
         }
+
+        public const float FinishedPlaying = -100000;
+        public const int FirstFrame = -100;
+        public const int LastFrame = 100;
 
         private List<Frame> frames;
 

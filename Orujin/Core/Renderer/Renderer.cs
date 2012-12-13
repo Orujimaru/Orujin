@@ -66,8 +66,12 @@ namespace Orujin.Core.Renderer
             this.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Camera.matrix);
 
             //Render the ambient light to the entire screen no matter camera zoom.
-            this.spriteBatch.Draw(this.ambientLight, new Rectangle((int)(-(Camera.screenCenter.X) * ((1 / Camera.scale.X)-1)), (int)( -(Camera.screenCenter.Y) * ((1 / Camera.scale.Y)-1)),
-                (int)((Camera.screenCenter.X * 2) * (1 / Camera.scale.X)) + 10, (int)((Camera.screenCenter.Y * 2) * (1 / Camera.scale.Y)) + 10), Color.White);
+            int x = (int)(-(Camera.screenCenter.X) * ((1 / Camera.scale.X)-1) - Camera.position.X);
+            int y = (int)(-(Camera.screenCenter.Y) * ((1 / Camera.scale.Y)-1) - Camera.position.Y);
+            int width = (int)((Camera.screenCenter.X * 2) * (1 / Camera.scale.X)) + 10;
+            int height = (int)((Camera.screenCenter.Y * 2) * (1 / Camera.scale.Y)) + 10;
+
+            this.spriteBatch.Draw(this.ambientLight, new Rectangle(x, y, width , height), Color.White);
 
             foreach (RendererPackage rp in lights)
             {
@@ -158,14 +162,46 @@ namespace Orujin.Core.Renderer
     { 
         public int overloadIndex;
         public Texture2D texture;
-        public Vector2 position;
+        
+        public Vector2 scrollOffset;
+
+        private Vector2 privatePosition;
+        public Vector2 position
+        {
+            get
+            {
+                return privatePosition -scrollOffset * Camera.position;
+            }
+            set { privatePosition = value; }
+        }
+        public Vector2 positionOffset;
         public Vector2 parentOffset;
-        public Rectangle destination;
+        
+
+        private Rectangle privateDestination;
+        public Rectangle destination
+        {
+            get
+            {
+                Rectangle tempDestination = this.privateDestination;
+                tempDestination.Width = (int)(scale.X * tempDestination.Width);
+                tempDestination.Height = (int)(scale.Y * tempDestination.Height);
+                return tempDestination;
+            }
+            set 
+            {
+                this.privateDestination = value;
+            } 
+        }
+
         public Rectangle source;
         public Color color;
         public Color originalColor;
         public float rotation;
+
+        internal Vector2 defaultOrigin;
         public Vector2 origin;
+        
         public Vector2 scale;
         public SpriteEffects spriteEffects;
         public int layer;
