@@ -36,7 +36,7 @@ namespace MyGame.MyGameObjects
             if (this.height > this.width) // It is for the X axis
             {
                 //Check which side the player is leaving
-                if (fixtureA.Body.Position.X < fixtureB.Body.Position.X) //Player is moving to the left
+                if (fixtureB.Body.Position.X < fixtureA.Body.Position.X) //Player is moving to the left
                 {
                     if (this.unlockDirection == UnlockWhenPlayerMovesLeft)
                     {
@@ -47,7 +47,7 @@ namespace MyGame.MyGameObjects
                         this.LockCameraHorizontally();
                     }
                 }
-                else if (fixtureA.Body.Position.X > fixtureB.Body.Position.X) //Player is moving to the right
+                else if (fixtureB.Body.Position.X > fixtureA.Body.Position.X) //Player is moving to the right
                 {
                     if (this.unlockDirection == UnlockWhenPlayerMovesRight)
                     {

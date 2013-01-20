@@ -38,24 +38,19 @@ namespace Orujin.Pipeline
                 XmlNode items = layer.FirstChild;
                 foreach (XmlNode item in items.ChildNodes)
                 {
-                    GameObject go = null;
                     if (item.OuterXml.StartsWith("<Item xsi:type=\"TextureItem\""))
                     {
-                        go = ParseTextureItem(item, scrollSpeed, layerName, cm);
+                        ParseTextureItem(item, scrollSpeed, layerName, cm);
                     }
                     else if (item.OuterXml.StartsWith("<Item xsi:type=\"RectangleItem\""))
                     {
-                        go = ParseRectangleItem(item, scrollSpeed, layerName);
-                    }
-                    if (go != null)
-                    {
-                        GameManager.game.AddObject(go);
+                        ParseRectangleItem(item, scrollSpeed, layerName);
                     }
                 }
             }           
         }
 
-        private static GameObject ParseTextureItem(XmlNode textureItem, Vector2 scrollSpeed, String layerName, ContentManager cm)
+        private static void ParseTextureItem(XmlNode textureItem, Vector2 scrollSpeed, String layerName, ContentManager cm)
         {
             ObjectInformation oi = new ObjectInformation();
             oi.scrollSpeed = scrollSpeed;
@@ -94,14 +89,14 @@ namespace Orujin.Pipeline
                         //oi.texture = cm.Load<Texture2D>(child.FirstChild.Value);
                         String[] splitString = child.FirstChild.Value.Split('\\');
                         String name = splitString[splitString.Length - 1];
+                        oi.name = name;
                         break;
                 }
             }
-
-            return objectProcessor.ProcessTextureObject(oi);
+            objectProcessor.ProcessTextureObject(oi);
         }
 
-        private static GameObject ParseRectangleItem(XmlNode rectangleItem, Vector2 scrollSpeed, String layerName)
+        private static void ParseRectangleItem(XmlNode rectangleItem, Vector2 scrollSpeed, String layerName)
         {
             ObjectInformation oi = new ObjectInformation();
             oi.scrollSpeed = scrollSpeed;
@@ -134,7 +129,7 @@ namespace Orujin.Pipeline
             oi.position.X += oi.width / 2;
             oi.position.Y += oi.height / 2;
 
-            return objectProcessor.ProcessPrimitiveObject(oi);
+            objectProcessor.ProcessPrimitiveObject(oi);
         }
 
         private static String GetLayerName(XmlNode layer)

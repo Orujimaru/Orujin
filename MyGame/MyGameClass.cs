@@ -21,18 +21,11 @@ namespace MyGame
         /***Add objects here***/
         public override void Start()
         {
-            this.LoadLevel("Content/Levels/TheMeadowPart1FixedGrass.xml", new MyObjectProcessor());
+            
             Tile tile1 = new Tile(OrujinGame.GetTexture2DByName("Textures/Level1"), new Vector2(1280/2, 720/2), new Vector2(0,0), "Tile1", "Tile");
 
-            //Platform testPlatform = new Platform(128000.0f, 50.0f, new Vector2(640,640), "PlatformA");
-
-            Player testPlayer = new Player(new Vector2(400, 200), "PlayerOne");
-            this.CreateCameraEventsAndBorders(testPlayer.identity);
-            
-
-            //SpriteSkeleton spriteSkeleton = new SpriteSkeleton(new Vector2(650, 515));
-
-           // ModularSkeleton modularSkeleton= new ModularSkeleton(new Vector2(800, 515));            
+            Player testPlayer = new Player(new Vector2(400, 500), "PlayerOne");
+            this.CreateCameraEventsAndBorders(testPlayer.identity);      
 
             base.AddInputCommand("PlayerOne", "Jump", DynamicArray.ObjectArray(2.0f), Keys.Up, Buttons.A);
             base.AddInputCommand("PlayerOne", "MovePlayer", DynamicArray.ObjectArray(new Vector2(-10.0f, 0)), Keys.Left, Buttons.LeftThumbstickLeft);
@@ -46,6 +39,10 @@ namespace MyGame
             base.AddInputCommand("Camera", "CenterParentContiniously", DynamicArray.ObjectArray(500), Keys.V, Buttons.X);
 
             base.AddInputCommand("Camera", "SetPosition", DynamicArray.ObjectArray(new Vector2(100, 100)), Keys.B, Buttons.X);
+
+            //Load level once the game and the events have been set up.
+            this.LoadLevel("Content/Levels/TheMeadowPart1FixedGrass.xml", new MyObjectProcessor());
+
             base.Start();
         }
 
@@ -96,7 +93,7 @@ namespace MyGame
             base.AddEventCondition(lockCameraVerticallyCondition);
 
             //Test unlocker
-            CameraObject co = new CameraObject(1280, 2, new Vector2(500, 300), CameraObject.UnlockWhenPlayerMovesRight, "TestCameraObject");
+            //CameraObject co = new CameraObject(1280, 2, new Vector2(640, 300), CameraObject.UnlockWhenPlayerMovesRight, "TestCameraObject");
         }
 
         /***Add game logic here***/

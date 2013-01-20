@@ -10,19 +10,22 @@ namespace MyGame
 {
     public class MyObjectProcessor : ObjectProcessor
     {
-        public override GameObject ProcessTextureObject(ObjectInformation oi)
+        public override void ProcessTextureObject(ObjectInformation oi)
         {
-
+            switch (oi.name.ToUpper())
+            {
+                case "CAMERAOBJECT":
+                    CameraObject cameraObject = new CameraObject(2000, 2, oi.position, true, oi.name);
+                    break;
+            }
            //Tile t = new Tile(item.getTexture(), item.Position, layer.ScrollSpeed, item.Name, layer.Name);
-            return null;
         }
 
-        public override GameObject ProcessPrimitiveObject(ObjectInformation oi)
+        public override void ProcessPrimitiveObject(ObjectInformation oi)
         {
             if (oi.customProperties.Count == 0) //No custom properties means a regular platform
             {
                 Platform tempPlatform = new Platform(oi.width, oi.height, oi.position, oi.name);
-                return tempPlatform;
             }
             else
             {
@@ -30,15 +33,13 @@ namespace MyGame
                 {
                     case "SLOPE":
                         Platform tempSlope = new Platform(oi.width, oi.height, oi.position, oi.name, true);
-                        return tempSlope;
+                        break;
 
                     case "INVERSLOPE":
                         Platform tempInverSlope = new Platform(oi.width, oi.height, oi.position, oi.name, false);
-                        return tempInverSlope;
+                        break;
                 }
             }
-
-            return null;
         }
     }
 }

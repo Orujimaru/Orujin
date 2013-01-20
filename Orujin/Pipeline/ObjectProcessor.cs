@@ -25,7 +25,7 @@ namespace Orujin.Pipeline
     }
     public abstract class ObjectProcessor
     {
-        public abstract GameObject ProcessTextureObject(ObjectInformation oi);
-        public abstract GameObject ProcessPrimitiveObject(ObjectInformation oi);
+        public abstract void ProcessTextureObject(ObjectInformation oi);
+        public abstract void ProcessPrimitiveObject(ObjectInformation oi);
     }
 }
