@@ -10,6 +10,30 @@ using Orujin.Core.Renderer;
 
 namespace Orujin.Framework
 {
+    public struct Identity
+    {
+        public string name;
+        public string tag;
+
+        public bool Equals(Identity other)
+        {
+            if (name.Equals(other.name) && tag.Equals(other.tag))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool PartlyEquals(Identity other)
+        {
+            if (name.Equals(other.name) || tag.Equals(other.tag))
+            {
+                return true;
+            }
+            return false;
+        }
+    }
+
     public class GameObject
     {
         /***Farseer Physics body of the game object, use addBody() to initialize it***/
@@ -20,8 +44,22 @@ namespace Orujin.Framework
 
         /***RendererComponent contains all the attributes the Renderer needs to render the object***/
         public RendererComponents rendererComponents { get; private set; }
-
+        
+        private Vector2 previousPosition;
         private Vector2 position;
+
+        private Vector2 initialPosition;
+        private bool constant;
+
+        public Vector2 distanceMoved
+        {
+            get
+            {
+                return position - previousPosition;
+            }
+            private set { return; }
+        }
+
         public Vector2 scrollOffset { get; protected set; }
         public Vector2 origin {
             get
@@ -32,7 +70,7 @@ namespace Orujin.Framework
                 }
                 else
                 {
-                    return position + scrollOffset * Camera.position;
+                    return position + scrollOffset * Camera.adjustedPosition;
                 }
             }
             private set
@@ -43,8 +81,7 @@ namespace Orujin.Framework
         public Vector2 nextVelocity { get; private set; }
         public float velocityModifier { get; private set; }
 
-        public string name { get; private set; }
-        public string tag { get; private set; }
+        public Identity identity { get; private set; }
 
         public bool checkForInput = false;
         public bool checkForPixelCollision = false;
@@ -56,21 +93,43 @@ namespace Orujin.Framework
 
         public GameObject(Vector2 position, string name, string tag)
         {
+            this.initialPosition = position;
             this.position = position;
+            this.previousPosition = position;
             this.nextVelocity = Vector2.Zero;
             this.velocityModifier = 0.2f;
             this.rendererComponents = new RendererComponents(this);
-            this.name = name;
-            this.tag = tag;
-
+           
+            Identity identity = new Identity();
+            identity.name = name;
+            identity.tag = tag;
+            this.identity = identity;
+            this.constant = false;
             idGen += 1;
             this.id = idGen;
         }
 
+        protected void SetConstant()
+        {
+            this.constant = true;
+        }
+
         public virtual void Update(float elapsedTime)
         {
-            this.HandlePhysicsBody();
-            this.HandleMove(elapsedTime);
+            if (this.constant)
+            {
+                this.position = initialPosition + Camera.adjustedPosition;
+                if (this.physicsBody != null)
+                {
+                    this.physicsBody.SetTransform( this.position / Camera.PixelsPerMeter, this.physicsBody.Rotation);
+                }
+            }
+            else
+            {
+                this.previousPosition = position;
+                this.HandlePhysicsBody();
+                this.HandleMove(elapsedTime);
+            }          
             this.rendererComponents.Update(elapsedTime);            
         }
 
@@ -141,6 +200,7 @@ namespace Orujin.Framework
             this.body.OnCollision += OnCollisionEnter;
             this.body.OnSeparation += OnCollisionExit;
             this.physicsBody.SetParent(this);
+            this.physicsBody.Position = this.position / Camera.PixelsPerMeter;
         }
  
         public void ShowOrigin(Texture2D originTexture)

@@ -39,11 +39,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="MyGameClass.cs" />
+    <Compile Include="MyGameObjects\CameraObject.cs" />
     <Compile Include="MyGameObjects\ModularSkeleton.cs" />
     <Compile Include="MyGameObjects\Platform.cs" />
     <Compile Include="MyGameObjects\Player.cs" />
     <Compile Include="MyGameObjects\SpriteSkeleton.cs" />
     <Compile Include="MyGameObjects\Tile.cs" />
+    <Compile Include="MyObjectProcessor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -99,6 +101,10 @@
     </Content>
     <Content Include="Content\Animations\SpriteAnimations\SkeletalSpriteAnimation.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Levels\TheMeadowPart1FixedGrass.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Icon.ico" />
   </ItemGroup>

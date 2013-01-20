@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Orujin.Core.Logic;
 using Orujin.Core.Renderer;
+using Orujin.Pipeline;
 
 namespace Orujin.Framework
 {
@@ -55,6 +56,11 @@ namespace Orujin.Framework
             return orujin.gameObjectManager.GetByName(name);
         }
 
+        internal CameraManager GetCameraManager()
+        {
+            return orujin.cameraManager;
+        }
+
         /*Attempts to find one or more GameObjects with a specific tag, returns an empty list if no GameObjects with the tag were found.*/
         public List<GameObject> FindObjectsWithTag(string tag)
         {
@@ -65,6 +71,16 @@ namespace Orujin.Framework
         public void AddInputCommand(string objectName, string methodName, object[] parameters, Keys key, Buttons button)
         {
             orujin.inputManager.AddCommand(objectName, methodName, parameters, key, button);
+        }
+
+        public void AddEventCondition(GameEventCondition condition)
+        {
+            orujin.conditionManager.AddCondition(condition);
+        }
+
+        public void RemoveEventCondition(int id)
+        {
+            orujin.conditionManager.RemoveCondition(id);
         }
 
         public static Texture2D GetTexture2DByName(String name)
@@ -80,6 +96,26 @@ namespace Orujin.Framework
         public static ModularAnimation GetModularAnimationByName(String name)
         {
             return orujin.GetModularAnimationByName(name);
+        }
+
+        protected void LoadLevel(string fileName, ObjectProcessor op)
+        {
+            orujin.LoadLevel(fileName, op);
+        }
+
+        public void RemotelyTriggerEvent(int i)
+        {
+            orujin.conditionManager.RemotelyFulfillCondition(i);
+        }
+
+        public void PauseLogic(int data)
+        {
+            orujin.updateLogic = false;
+        }
+
+        public void ResumeLogic(int data)
+        {
+            orujin.updateLogic = true;
         }
     }
 }

@@ -14,6 +14,7 @@ namespace MyGame.MyGameObjects
         {
             this.rendererComponents.AddSprite(OrujinGame.GetTexture2DByName("Textures/SkeletonSpriteSheet"), Vector2.Zero, null, Color.White, "SpriteAnimation");
             this.rendererComponents.AddAnimationToComponent("SpriteAnimation", OrujinGame.GetSpriteAnimationByName("SkeletalSpriteAnimation"));
+            GameManager.game.AddObject(this);
         }
     }
 }

@@ -70,6 +70,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Core\Camera\Camera.cs" />
+    <Compile Include="Core\Logic\ConditionManager.cs" />
     <Compile Include="Core\Physics\PixelCollisionManager.cs" />
     <Compile Include="Core\GameHelp\DynamicArray.cs" />
     <Compile Include="Core\Input\InputManager.cs" />
@@ -190,11 +191,16 @@
     <Compile Include="Debug\DebugManager.cs" />
     <Compile Include="Debug\FarseerDebugView.cs" />
     <Compile Include="Debug\PrimitiveBatch.cs" />
+    <Compile Include="Framework\GameEventCondition.cs" />
+    <Compile Include="Framework\GameEvent.cs" />
     <Compile Include="Framework\GameManager.cs" />
     <Compile Include="Framework\GameObject.cs" />
     <Compile Include="Framework\OrujinGame.cs" />
+    <Compile Include="Framework\Trigger.cs" />
     <Compile Include="Orujin.cs" />
+    <Compile Include="Pipeline\LevelLoader.cs" />
     <Compile Include="Pipeline\ModularAnimationLoader.cs" />
+    <Compile Include="Pipeline\ObjectProcessor.cs" />
     <Compile Include="Pipeline\SpriteAnimationLoader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -223,7 +229,6 @@
     <Content Include="Content\Fonts\font.xnb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Orujin_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">

@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Orujin.Core.Renderer
 {
-    public class Renderer
+    internal class Renderer
     {
         private RenderTarget2D lightTarget;
         private RenderTarget2D lightBlockerTarget;
@@ -66,8 +66,8 @@ namespace Orujin.Core.Renderer
             this.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, null, null, null, null, Camera.matrix);
 
             //Render the ambient light to the entire screen no matter camera zoom.
-            int x = (int)(-(Camera.screenCenter.X) * ((1 / Camera.scale.X)-1) - Camera.position.X);
-            int y = (int)(-(Camera.screenCenter.Y) * ((1 / Camera.scale.Y)-1) - Camera.position.Y);
+            int x = (int)(-(Camera.screenCenter.X) * ((1 / Camera.scale.X)-1) + Camera.adjustedPosition.X);
+            int y = (int)(-(Camera.screenCenter.Y) * ((1 / Camera.scale.Y)-1) + Camera.adjustedPosition.Y);
             int width = (int)((Camera.screenCenter.X * 2) * (1 / Camera.scale.X)) + 10;
             int height = (int)((Camera.screenCenter.Y * 2) * (1 / Camera.scale.Y)) + 10;
 
@@ -170,7 +170,7 @@ namespace Orujin.Core.Renderer
         {
             get
             {
-                return privatePosition -scrollOffset * Camera.position;
+                return privatePosition + scrollOffset * Camera.adjustedPosition;
             }
             set { privatePosition = value; }
         }

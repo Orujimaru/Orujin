@@ -15,6 +15,7 @@ namespace MyGame.MyGameObjects
         {
             this.rendererComponents.AddSprite(texture, new Vector2(0, 0), null, Color.White, name);
             this.scrollOffset = scrollOffset;
+            GameManager.game.AddObject(this);
         }
     }
 }

@@ -37,6 +37,7 @@ namespace MyGame.MyGameObjects
             this.rendererComponents.AddModularAnimationToComponent("RightLeg", OrujinGame.GetModularAnimationByName("RightLeg"));
             this.rendererComponents.AddModularAnimationToComponent("TopLeftLeg", OrujinGame.GetModularAnimationByName("TopLeftLeg"));
             this.rendererComponents.AddModularAnimationToComponent("LeftLeg", OrujinGame.GetModularAnimationByName("LeftLeg"));
+            GameManager.game.AddObject(this);
         }
     }
 }

@@ -75,7 +75,7 @@ namespace Orujin.Core.Logic
             {
                 if (ic.isDown)
                 {
-                    if (gameObject.name.Equals(ic.objectName))
+                    if (gameObject.identity.name.Equals(ic.objectName))
                     {
                         MethodInfo method = gameObject.GetType().GetMethod(ic.methodName);
                         if (ic.thumbstick)
@@ -87,6 +87,16 @@ namespace Orujin.Core.Logic
                             method.Invoke(gameObject, ic.parameters);
                         }
                     }
+                    else if (ic.objectName.Equals("Camera"))
+                    {
+                        MethodInfo method = GameManager.game.GetCameraManager().GetType().GetMethod(ic.methodName);
+                        method.Invoke(GameManager.game.GetCameraManager(), ic.parameters);
+                    }
+                    else if (ic.objectName.Equals("Game"))
+                    {
+                        MethodInfo method = GameManager.game.GetType().GetMethod(ic.methodName);
+                        method.Invoke(GameManager.game, ic.parameters);
+                    }
                 }
             }
         }
@@ -95,7 +105,7 @@ namespace Orujin.Core.Logic
         {
             foreach (GameObject go in this.gameObjects)
             {
-                if (go.name.Equals(name))
+                if (go.identity.name.Equals(name))
                 {
                     return go;
                 }
@@ -108,7 +118,7 @@ namespace Orujin.Core.Logic
             List<GameObject> tempObjects = new List<GameObject>();
             foreach (GameObject go in this.gameObjects)
             {
-                if (go.tag.Equals(tag))
+                if (go.identity.tag.Equals(tag))
                 {
                     tempObjects.Add(go);
                 }

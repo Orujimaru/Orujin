@@ -32,7 +32,6 @@ namespace Orujin.Core.Renderer
             this.lights = new List<RendererPackage>();
             this.lightBlockers = new List<RendererPackage>();
             this.debug = new List<RendererPackage>();
-            Camera.Initialize(frameWidth, frameHeight);
         }
 
         public void SetAmbientLightIntensity(GraphicsDeviceManager graphics, float intensity)

@@ -17,6 +17,7 @@ using Orujin.Debug;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using Orujin.Pipeline;
+using Orujin.Framework;
 #endregion
 
 namespace Orujin
@@ -26,9 +27,11 @@ namespace Orujin
         private GraphicsDeviceManager graphics;
         internal RendererManager rendererManager { get; private set; }
         internal GameObjectManager gameObjectManager { get; private set; }
+        internal GameEventConditionManager conditionManager { get; private set; }
         internal InputManager inputManager { get; private set; }
         internal CameraManager cameraManager { get; private set; }
         internal DebugManager debugManager { get; private set; }
+        internal bool updateLogic = true;
 
         public Orujin()
             : base()
@@ -42,9 +45,10 @@ namespace Orujin
             this.rendererManager = new RendererManager(ref this.graphics, 1280, 720);
             this.rendererManager.SetAmbientLightIntensity(this.graphics, 1f);
             this.gameObjectManager = new GameObjectManager();
+            this.conditionManager = new GameEventConditionManager();
             this.inputManager = new InputManager();
-            this.cameraManager = new CameraManager();
-            this.debugManager = new DebugManager();
+            this.cameraManager = new CameraManager(1280, 720);
+            this.debugManager = new DebugManager();            
             base.Initialize();
         }
 
@@ -53,6 +57,12 @@ namespace Orujin
             this.debugManager.InitiateFarseerDebugView(this.graphics.GraphicsDevice, this.Content, GameManager.game.world);
             GameManager.game.Initialize(this);
             GameManager.game.Start();
+
+            //TEMP ADD CONDITION AND TRIGGER
+            //Identity playerIdentity = new Identity();
+            //playerIdentity.name = "PlayerOne";
+            //playerIdentity.tag = "Player";
+            //Trigger t = new Trigger(new Vector2(600, 500), new Rectangle(0, 0, 100, 100), "TempTrigger", 1, playerIdentity, GameManager.game.world);
         }
 
         protected override void UnloadContent()
@@ -65,31 +75,23 @@ namespace Orujin
                 Exit();
 
             float elapsedTime = gameTime.ElapsedGameTime.Milliseconds;
-                
+            
+            this.cameraManager.Update(elapsedTime);
+    
             List<InputCommand> input = this.inputManager.Update();
             
-            this.gameObjectManager.Update(elapsedTime, input);
+            
+            this.conditionManager.Update(elapsedTime, this.gameObjectManager.GetGameObjects());
 
-            this.HandleAdditionalInput(input);
-            GameManager.game.world.Step((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f);
+            if (this.updateLogic)
+            {
+                this.gameObjectManager.Update(elapsedTime, input);
+                GameManager.game.world.Step((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f);
+            }
             
             base.Update(gameTime);
         }
 
-        private void HandleAdditionalInput(List<InputCommand> input)
-        {
-            foreach (InputCommand ic in input)
-            {
-                if (ic.objectName.Equals("Camera"))
-                {
-                    if (ic.isDown)
-                    {
-                        MethodInfo method = new Camera().GetType().GetMethod(ic.methodName);
-                        method.Invoke(this.cameraManager, ic.parameters);
-                    }
-                }
-            }
-        }
 
         protected override void Draw(GameTime gameTime)
         {
@@ -117,6 +119,11 @@ namespace Orujin
         public ModularAnimation GetModularAnimationByName(String name)
         {
             return ModularAnimationLoader.Load(name);
+        }
+
+        public void LoadLevel(string fileName, ObjectProcessor op)
+        {
+            LevelLoader.FromFile(fileName, this.Content, op);
         }
     }
 }
