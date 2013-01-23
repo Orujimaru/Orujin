@@ -223,6 +223,20 @@ namespace Orujin.Core.Renderer
         public SpriteEffects spriteEffects;
         public int layer;
         
+        public void ToggleGrayTexture()
+        {
+            if(this.grayTexture == null)
+            {
+                this.CreateGrayscale();
+            }
+            this.gray = true;
+        }
+        
+        public void ToggleNormalTexture()
+        {
+            this.gray = false;
+        }
+        
         public void CreateGrayscale()
         {
             this.grayTexture = new Texture2D(this.texture); 
