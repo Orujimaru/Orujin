@@ -16,9 +16,11 @@ namespace MyGame
             {
                 case "CAMERAOBJECT":
                     CameraObject cameraObject = new CameraObject(2000, 2, oi.position, true, oi.name);
-                    break;
+                    return;
             }
-           //Tile t = new Tile(item.getTexture(), item.Position, layer.ScrollSpeed, item.Name, layer.Name);
+           
+           //If we have come this far we will create a tile with the texture
+           Tile t = new Tile(item.getTexture(), item.Position, layer.ScrollSpeed, item.Name, layer.Name);
         }
 
         public override void ProcessPrimitiveObject(ObjectInformation oi)
@@ -26,6 +28,7 @@ namespace MyGame
             if (oi.customProperties.Count == 0) //No custom properties means a regular platform
             {
                 Platform tempPlatform = new Platform(oi.width, oi.height, oi.position, oi.name);
+                return;
             }
             else
             {
@@ -33,11 +36,11 @@ namespace MyGame
                 {
                     case "SLOPE":
                         Platform tempSlope = new Platform(oi.width, oi.height, oi.position, oi.name, true);
-                        break;
+                        return;
 
                     case "INVERSLOPE":
                         Platform tempInverSlope = new Platform(oi.width, oi.height, oi.position, oi.name, false);
-                        break;
+                        return;
                 }
             }
         }
