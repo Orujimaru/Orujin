@@ -162,6 +162,24 @@ namespace Orujin.Core.Renderer
     { 
         public int overloadIndex;
         public Texture2D texture;
+        {
+            get
+            {
+                if(this.gray)
+                {
+                    return this.grayTexture;
+                }
+                return this.normalTexture;
+            }
+            set
+            {
+                this.normalTexture = value;
+            }
+        }
+        
+        private bool gray = false;
+        private Texture2D normalTexture;
+        private Texture2D grayTexture;
         
         public Vector2 scrollOffset;
 
@@ -170,22 +188,21 @@ namespace Orujin.Core.Renderer
         {
             get
             {
-                return privatePosition + scrollOffset * Camera.adjustedPosition;
+                return this.privatePosition + this.scrollOffset * this.Camera.adjustedPosition;
             }
-            set { privatePosition = value; }
+            set { this.privatePosition = value; }
         }
         public Vector2 positionOffset;
         public Vector2 parentOffset;
         
-
         private Rectangle privateDestination;
         public Rectangle destination
         {
             get
             {
                 Rectangle tempDestination = this.privateDestination;
-                tempDestination.Width = (int)(scale.X * tempDestination.Width);
-                tempDestination.Height = (int)(scale.Y * tempDestination.Height);
+                tempDestination.Width = (int)(this.scale.X * tempDestination.Width);
+                tempDestination.Height = (int)(this.scale.Y * tempDestination.Height);
                 return tempDestination;
             }
             set 
@@ -205,5 +222,19 @@ namespace Orujin.Core.Renderer
         public Vector2 scale;
         public SpriteEffects spriteEffects;
         public int layer;
+        
+        public void CreateGrayscale()
+        {
+            this.grayTexture = new Texture2D(this.texture); 
+            Color[] color = new Color[this.grayTexture.Width*grayTexture.Height]; 
+            this.grayTexture.GetData<Color>(color); 
+            for (int i = 0; i < this.grayTexture.Width * this.grayTexture.Height; i++) 
+            { 
+                color[i].R = (byte)((float)color[i].R * 0.3f); 
+                color[i].G = (byte)((float)color[i].G * 0.59f); 
+                color[i].B = (byte)((float)color[i].B * 0.11f); 
+            } 
+            this.grayTexture.SetData<Color>(color); 
+        }
     }
 }
